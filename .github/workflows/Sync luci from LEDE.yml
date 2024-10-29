@@ -1,9 +1,9 @@
 name: Sync luci from LEDE
 
 on:
-  workflow_dispatch:  # 允许手动触发
   schedule:
     - cron: '0 6 * * *'  # 每天凌晨6点同步
+  workflow_dispatch:  # 允许手动触发
 
 jobs:
   sync:
@@ -27,12 +27,12 @@ jobs:
         run: |
           git fetch upstream
           git checkout openwrt-23.05
-          git merge upstream/openwrt-23.05 -m "Merge from upstream openwrt-23.05"
+          git merge upstream/openwrt-23.05 --allow-unrelated-histories -m "Merge from upstream openwrt-23.05"
           git push origin openwrt-23.05
 
       - name: Fetch upstream changes for master
         run: |
           git fetch upstream
           git checkout master
-          git merge upstream/master -m "Merge from upstream master"
+          git merge upstream/master --allow-unrelated-histories -m "Merge from upstream master"
           git push origin master
