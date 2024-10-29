@@ -1,5 +1,5 @@
-name: Sync with upstream
-
+name: Sync luci_Master from LEDE
+#忽略 MosDNS & Openclash
 on:
   schedule:
     - cron: '0 6 * * *'  # 每天凌晨6点同步
@@ -30,19 +30,18 @@ jobs:
         run: |
           echo "Merging upstream changes into openwrt-23.05"
           git checkout openwrt-23.05
-
-          # 合并 upstream 的更改
           git merge upstream/openwrt-23.05 --allow-unrelated-histories -m "Merge from upstream"
 
-          # 恢复本地版本的两个应用
-          git checkout HEAD -- applications/luci-app-mosdns
-          git checkout HEAD -- applications/luci-app-openclash
+          # 检查并恢复应用程序
+          if [ -d "applications/luci-app-mosdns" ]; then
+            git checkout --ours applications/luci-app-mosdns
+          fi
+          
+          if [ -d "applications/luci-app-openclash" ]; then
+            git checkout --ours applications/luci-app-openclash
+          fi
 
-          # 提交更改
-          git commit -m "Restore local versions of applications/luci-app-mosdns and applications/luci-app-openclash"
-
-          # 推送到远程
-          git push origin openwrt-23.05
+          git push origin openwrt-23.05 || (git pull --rebase upstream openwrt-23.05 && git push origin openwrt-23.05)
 
       - name: Sync master branch
         run: |
