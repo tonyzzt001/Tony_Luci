@@ -35,14 +35,9 @@ jobs:
           git checkout -b temp-merge
           git merge upstream/openwrt-23.05 --allow-unrelated-histories -m "Merge from upstream"
 
-          # 检查并恢复应用程序
-          if [ -d "applications/luci-app-mosdns" ]; then
-            git checkout --ours applications/luci-app-mosdns
-          fi
-          
-          if [ -d "applications/luci-app-openclash" ]; then
-            git checkout --ours applications/luci-app-openclash
-          fi
+          # 恢复本地版本
+          git checkout --ours applications/luci-app-mosdns
+          git checkout --ours applications/luci-app-openclash
 
           # 提交更改并合并回 openwrt-23.05
           git checkout openwrt-23.05
