@@ -34,10 +34,13 @@ jobs:
         run: |
           git fetch upstream
           git checkout master
-          git merge upstream/master --allow-unrelated-histories -m "Merge from upstream master" || true  # 尝试合并，如果有冲突则继续执行
+          git merge upstream/master --allow-unrelated-histories -m "Merge from upstream master"
+
+      - name: Push changes to origin master
+        run: |
           git push origin master || true  # 如果推送失败，继续执行后续步骤
 
       - name: Pull latest changes if push failed
         run: |
-          git pull --rebase upstream master || echo "No changes to pull"
+          git pull --rebase upstream master
           git push origin master
