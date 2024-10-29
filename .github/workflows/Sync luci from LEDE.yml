@@ -35,6 +35,15 @@ jobs:
             mv applications/luci-app-openclash /tmp/
           fi
 
+      - name: Remove specific applications
+        run: |
+          if [ -d "applications/luci-app-mosdns" ]; then
+            rm -rf applications/luci-app-mosdns
+          fi
+          if [ -d "applications/luci-app-openclash" ]; then
+            rm -rf applications/luci-app-openclash
+          fi
+
       - name: Merge upstream changes
         run: |
           echo "Merging upstream changes into openwrt-23.05"
