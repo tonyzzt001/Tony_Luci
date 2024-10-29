@@ -1,4 +1,4 @@
-name: Sync luci from LEDE
+name: Sync with upstream
 
 on:
   schedule:
@@ -29,11 +29,11 @@ jobs:
       - name: Sync master branch
         run: |
           git checkout master
-          git merge upstream/master --allow-unrelated-histories -m "Merge from upstream master"
-          git push origin master || (git pull --rebase upstream master && git push origin master)
+          git pull --rebase upstream master || (git merge upstream/master --allow-unrelated-histories -m "Merge from upstream master")
+          git push origin master
 
       - name: Sync openwrt-23.05 branch
         run: |
           git checkout openwrt-23.05
-          git merge upstream/openwrt-23.05 --allow-unrelated-histories -m "Merge from upstream openwrt-23.05"
-          git push origin openwrt-23.05 || (git pull --rebase upstream openwrt-23.05 && git push origin openwrt-23.05)
+          git pull --rebase upstream openwrt-23.05 || (git merge upstream/openwrt-23.05 --allow-unrelated-histories -m "Merge from upstream openwrt-23.05")
+          git push origin openwrt-23.05
