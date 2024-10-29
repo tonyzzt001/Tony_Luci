@@ -29,11 +29,11 @@ jobs:
       - name: Merge upstream changes
         run: |
           git checkout openwrt-23.05
-          git merge upstream/openwrt-23.05 -m "Merge from upstream"
+          git merge upstream/openwrt-23.05 --allow-unrelated-histories -m "Merge from upstream"
           git push origin openwrt-23.05 || (git pull --rebase upstream openwrt-23.05 && git push origin openwrt-23.05)
 
       - name: Sync master branch
         run: |
           git checkout master
-          git merge upstream/master -m "Merge from upstream master"
+          git merge upstream/master --allow-unrelated-histories -m "Merge from upstream master"
           git push origin master || (git pull --rebase upstream master && git push origin master)
