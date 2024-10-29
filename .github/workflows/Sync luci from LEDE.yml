@@ -30,22 +30,19 @@ jobs:
         run: |
           echo "Merging upstream changes into openwrt-23.05"
           git checkout openwrt-23.05
-          
-          # 创建临时分支以合并 upstream
-          git checkout -b temp-merge
+
+          # 合并 upstream 的更改
           git merge upstream/openwrt-23.05 --allow-unrelated-histories -m "Merge from upstream"
 
-          # 恢复本地版本
-          git checkout --ours applications/luci-app-mosdns
-          git checkout --ours applications/luci-app-openclash
+          # 恢复本地版本的两个应用
+          git checkout HEAD -- applications/luci-app-mosdns
+          git checkout HEAD -- applications/luci-app-openclash
 
-          # 提交更改并合并回 openwrt-23.05
-          git checkout openwrt-23.05
-          git merge temp-merge -m "Merge from temp merge"
+          # 提交更改
+          git commit -m "Restore local versions of applications/luci-app-mosdns and applications/luci-app-openclash"
+
+          # 推送到远程
           git push origin openwrt-23.05
-
-          # 删除临时分支
-          git branch -d temp-merge
 
       - name: Sync master branch
         run: |
