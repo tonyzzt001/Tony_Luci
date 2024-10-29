@@ -1,4 +1,4 @@
-name: Sync luci from LEDE
+name: Sync with upstream
 
 on:
   schedule:
@@ -23,24 +23,21 @@ jobs:
       - name: Add upstream repository
         run: git remote add upstream https://github.com/coolsnowwolf/luci.git
 
-      - name: Fetch upstream changes for openwrt-23.05
+      - name: Fetch upstream changes
         run: |
           git fetch upstream
           git checkout openwrt-23.05
           git merge upstream/openwrt-23.05 --allow-unrelated-histories -m "Merge from upstream openwrt-23.05"
           git push origin openwrt-23.05
 
-      - name: Fetch upstream changes for master
+      - name: Checkout master branch
+        run: git checkout master
+
+      - name: Fetch upstream master changes
         run: |
           git fetch upstream
-          git checkout master
-          git merge upstream/master --allow-unrelated-histories -m "Merge from upstream master"
+          git merge upstream/master --allow-unrelated-histories -m "Merge from upstream master" || echo "No changes to merge"
 
       - name: Push changes to origin master
         run: |
-          git push origin master || true  # 如果推送失败，继续执行后续步骤
-
-      - name: Pull latest changes if push failed
-        run: |
-          git pull --rebase upstream master
-          git push origin master
+          git push origin master || (git pull --rebase upstream master && git push origin master)
