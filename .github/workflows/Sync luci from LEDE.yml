@@ -26,23 +26,11 @@ jobs:
       - name: Fetch upstream changes
         run: git fetch upstream
 
-      - name: Backing up local apps
-        run: |
-          if [ -d "applications/luci-app-mosdns" ]; then
-            mv applications/luci-app-mosdns /tmp/
-          fi
-          if [ -d "applications/luci-app-openclash" ]; then
-            mv applications/luci-app-openclash /tmp/
-          fi
-
       - name: Remove specific applications
         run: |
-          if [ -d "applications/luci-app-mosdns" ]; then
-            rm -rf applications/luci-app-mosdns
-          fi
-          if [ -d "applications/luci-app-openclash" ]; then
-            rm -rf applications/luci-app-openclash
-          fi
+          echo "Removing unwanted applications"
+          rm -rf applications/luci-app-mosdns
+          rm -rf applications/luci-app-openclash
 
       - name: Merge upstream changes
         run: |
