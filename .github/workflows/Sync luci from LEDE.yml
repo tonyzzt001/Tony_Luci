@@ -1,5 +1,5 @@
 name: Sync luci from LEDE
-# 忽略MosDNS & Openclash
+
 on:
   schedule:
     - cron: '0 6 * * *'  # 每天凌晨6点同步
@@ -30,6 +30,9 @@ jobs:
         run: |
           echo "Merging upstream changes into openwrt-23.05"
           git checkout openwrt-23.05
+          
+          # 创建临时分支以合并 upstream
+          git checkout -b temp-merge
           git merge upstream/openwrt-23.05 --allow-unrelated-histories -m "Merge from upstream"
 
           # 检查并恢复应用程序
@@ -41,7 +44,13 @@ jobs:
             git checkout --ours applications/luci-app-openclash
           fi
 
-          git push origin openwrt-23.05 || (git pull --rebase upstream openwrt-23.05 && git push origin openwrt-23.05)
+          # 提交更改并合并回 openwrt-23.05
+          git checkout openwrt-23.05
+          git merge temp-merge -m "Merge from temp merge"
+          git push origin openwrt-23.05
+
+          # 删除临时分支
+          git branch -d temp-merge
 
       - name: Sync master branch
         run: |
