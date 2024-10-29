@@ -35,5 +35,6 @@ jobs:
       - name: Sync master branch
         run: |
           git checkout master
+          git pull origin master  # 确保本地分支与远程分支同步
           git merge upstream/master --allow-unrelated-histories -m "Merge from upstream master"
           git push origin master || (git pull --rebase upstream master && git push origin master)
