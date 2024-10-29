@@ -1,4 +1,4 @@
-name: Sync luci from LEDE
+name: Sync with upstream
 
 on:
   schedule:
