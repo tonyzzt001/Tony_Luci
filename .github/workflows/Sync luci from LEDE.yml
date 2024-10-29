@@ -26,30 +26,21 @@ jobs:
       - name: Fetch upstream changes
         run: git fetch upstream
 
-      - name: Backup local apps
+      - name: Backing up local apps
         run: |
-          echo "Backing up local apps"
-          mv applications/luci-app-mosdns /tmp/
-          mv applications/luci-app-openclash /tmp/
+          if [ -d "applications/luci-app-mosdns" ]; then
+            mv applications/luci-app-mosdns /tmp/
+          fi
+          if [ -d "applications/luci-app-openclash" ]; then
+            mv applications/luci-app-openclash /tmp/
+          fi
 
       - name: Merge upstream changes
         run: |
           echo "Merging upstream changes into openwrt-23.05"
           git checkout openwrt-23.05
           git merge upstream/openwrt-23.05 --allow-unrelated-histories -m "Merge from upstream"
-
-      - name: Restore local apps
-        run: |
-          echo "Restoring local apps"
-          mv /tmp/luci-app-mosdns applications/
-          mv /tmp/luci-app-openclash applications/
-
-          # 提交更改
-          git add applications/luci-app-mosdns applications/luci-app-openclash
-          git commit -m "Restore local versions of applications/luci-app-mosdns and applications/luci-app-openclash"
-
-          # 推送到远程
-          git push origin openwrt-23.05
+          git push origin openwrt-23.05 || (git pull --rebase upstream openwrt-23.05 && git push origin openwrt-23.05)
 
       - name: Sync master branch
         run: |
