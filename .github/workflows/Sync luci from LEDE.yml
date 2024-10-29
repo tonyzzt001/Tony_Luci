@@ -1,5 +1,5 @@
-name: Sync with upstream
-
+name: Sync luci from LEDE
+# 忽略MosDNS & Openclash
 on:
   schedule:
     - cron: '0 6 * * *'  # 每天凌晨6点同步
